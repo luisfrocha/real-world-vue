@@ -1,33 +1,43 @@
 <template>
-  <div id="nav">
-    <router-link :to="{name:'EventList'}">Events</router-link> |
-    <router-link :to="{name:'About'}">About</router-link>
+  <div id="app">
+    <app-nav />
+    <router-view class="page" />
   </div>
-  <router-view />
 </template>
 
-<style>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-  }
+<script>
+  import AppNav from './components/AppNav';
+  import axios from'axios';
 
-  #nav {
-    padding: 30px;
-  }
+  export default {
+    components: { AppNav },
+    created(){
+      const userString = localStorage.getItem( 'user' );
+      if( userString ){
+        const userData = JSON.parse( userString );
+        this.$store.commit( 'SET_USER_DATA',userData );
+      }
+      axios.interceptors.response.use(
+        response=>response,
+        error=>{
+          console.log( error.response );
+          if( error.response.status === 401 ){
+            this.$store.dispatch( 'logout' );
+          }
+          return Promise.reject( error );
+        }
+      );
+    },
+  };
+</script>
 
-  #nav a {
-    font-weight: bold;
-    color: #2c3e50;
-  }
-
-  #nav a.router-link-exact-active {
-    color: #42b983;
-  }
-  h4 {
-    font-size: 20px;
+<style lang="scss">
+  @import "./assets/styles/global.scss";
+  .page {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100vh - 56px);
   }
 </style>

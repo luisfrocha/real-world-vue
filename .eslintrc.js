@@ -10,9 +10,9 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'quotes': ['error', 'single', { avoidEscape: true }],
+    quotes: ['error', 'single', { avoidEscape: true }],
     'quote-props': ['error', 'as-needed'],
-    'semi': ['error', 'always'],
+    semi: ['error', 'always'],
     'space-before-function-paren': ['error', 'never'],
     'array-bracket-spacing': ['error', 'always'],
     'arrow-parens': ['error', 'as-needed'],
@@ -27,6 +27,19 @@ module.exports = {
         exports: 'only-multiline',
         functions: 'never'
       }
+    ],
+    'vue/max-attributes-per-line': [
+      'error',
+      {
+        singleline: 4,
+        multiline: {
+          max: 1,
+          allowFirstLine: false
+        }
+      }
     ]
+  },
+  parserOptions: {
+    parser: "babel-eslint"
   }
 };

@@ -1,30 +1,46 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import EventList from '../views/EventList.vue';
-import EventDetails from '../views/EventDetails.vue';
-import About from '../views/About.vue';
+import {createRouter, createWebHistory} from 'vue-router';
+import Dashboard from '../views/Dashboard.vue';
+import Home from '../views/Home.vue';
+import RegisterUser from '../views/RegisterUser.vue';
+import LoginUser from '../views/LoginUser.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'EventList',
-    component: EventList
+    name: 'home',
+    component: Home,
   },
   {
-    path: '/event/:id',
-    name: 'EventDetails',
-    props: true,
-    component: EventDetails
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard,
+    meta: {requiresAuth: true},
   },
   {
-    path: '/about',
-    name: 'About',
-    component: About
+    path: '/register',
+    name: 'register',
+    component: RegisterUser,
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginUser,
   },
 ];
 
 const router = createRouter( {
   history: createWebHistory( process.env.BASE_URL ),
-  routes
+  routes,
+} );
+
+router.beforeEach( ( to, from, next ) => {
+  const loggedIn = localStorage.getItem( 'user' );
+
+  if ( to.matched.some( record => record.meta.requiresAuth ) && !loggedIn ) {
+    next( '/' );
+  } else {
+    next();
+  }
 } );
 
 export default router;
